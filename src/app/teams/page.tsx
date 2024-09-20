@@ -9,16 +9,20 @@ import { Plus } from "lucide-react";
 export default function TeamsPage() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [players, setPlayers] = useState<Player[]>([]);
-
-  useEffect(() => {
-    setPlayers(
-      JSON.parse(window.sessionStorage.getItem("players") ?? "[]") ?? []
-    );
-  }, []);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     setTeams(JSON.parse(window.sessionStorage.getItem("teams") ?? "[]") ?? []);
+    setPlayers(
+      JSON.parse(window.sessionStorage.getItem("players") ?? "[]") ?? []
+    );
+    setIsLoading(false);
   }, []);
+
+  useEffect(() => {
+    if (!isLoading)
+      window.sessionStorage.setItem("teams", JSON.stringify(teams));
+  }, [teams, isLoading]);
 
   const addTeam = () => {
     setTeams([...teams, { id: uniqueId(), playerIds: [] }]);
@@ -32,7 +36,6 @@ export default function TeamsPage() {
       name,
     };
     setTeams([...updatedTeams]);
-    window.sessionStorage.setItem("teams", JSON.stringify([...updatedTeams]));
   };
 
   const removeTeam = (index: number) => {
@@ -90,9 +93,11 @@ export default function TeamsPage() {
       </span>
 
       {/* Unassigned Players */}
-      <hr className="my-3"></hr>
+      <hr className="my-6"></hr>
       <p className="text-md font-bold">Unassigned Players</p>
-      {getUnassignedPlayers() && <p className="my-3">No unassigned players!</p>}
+      {getUnassignedPlayers().length === 0 && (
+        <p className="my-3">No unassigned players!</p>
+      )}
       {getUnassignedPlayers().map((player, i) => (
         <div className="w-2/5" key={i}>
           <PlayerCard name={player.name} index={i}></PlayerCard>
