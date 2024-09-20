@@ -1,18 +1,34 @@
 "use client";
 import { Player } from "@types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PlayerCard from "../../components/player-card";
 
 export default function PlayersPage() {
   const [players, setPlayers] = useState<Player[]>([]);
 
-  const save = (name: string, index: number, icon?: string) => {
+  useEffect(() => {
+    setPlayers(
+      JSON.parse(window.sessionStorage.getItem("players") ?? "[]") ?? []
+    );
+  }, []);
+
+  const savePlayer = (name: string, index: number, icon?: string) => {
     const updatedPlayers = players;
     updatedPlayers[index] = {
       ...updatedPlayers[index],
       name,
       icon,
     };
+    setPlayers([...updatedPlayers]);
+    window.sessionStorage.setItem(
+      "players",
+      JSON.stringify([...updatedPlayers])
+    );
+  };
+
+  const removePlayer = (index: number) => {
+    const updatedPlayers = players;
+    updatedPlayers.splice(index, 1);
     setPlayers([...updatedPlayers]);
   };
 
@@ -27,7 +43,8 @@ export default function PlayersPage() {
         <PlayerCard
           key={i}
           name={player.name}
-          onSave={save}
+          onSave={savePlayer}
+          onRemove={removePlayer}
           index={i}
         ></PlayerCard>
       ))}

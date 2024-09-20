@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 interface PlayerCardProps {
   onSave: (name: string, index: number, icon?: string) => void;
+  onRemove: (index: number) => void;
   name: string;
   index: number;
 }
@@ -9,10 +10,12 @@ interface PlayerCardProps {
 export default function PlayerCard(props: PlayerCardProps) {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [name, setName] = useState<string>();
+  const [index, setIndex] = useState<number>(props.index);
 
   useEffect(() => {
     console.log("Setting name");
     setName(props.name);
+    setIndex(props.index);
     if (props.name === undefined) {
       setIsEditing(true);
     }
@@ -50,10 +53,13 @@ export default function PlayerCard(props: PlayerCardProps) {
           </div>
         </form>
       ) : (
-        <div className="w-full grid grid-cols-[1fr_auto] gap-4">
+        <div className="w-full grid grid-cols-[1fr_auto_auto] gap-4">
           <p>{name}</p>
           <button type="button" onClick={() => setIsEditing(true)}>
             Edit
+          </button>
+          <button type="button" onClick={() => props.onRemove(index)}>
+            Remove
           </button>
         </div>
       )}
