@@ -1,22 +1,26 @@
 import { useEffect, useState } from "react";
+import { Player } from "@types";
+import { PlayerCard } from "@components";
 
-interface PlayerCardProps {
-  onSave?: (name: string, index: number, icon?: string) => void;
-  onRemove?: (index: number) => void;
+interface TeamCardProps {
+  onSave: (name: string, index: number, playerIds: string[]) => void;
+  onRemove: (index: number) => void;
+  onRemovePlayer: (id: string) => void;
   name?: string;
   index: number;
-  canEdit?: boolean;
+  players: Player[];
 }
 
-export default function PlayerCard(props: PlayerCardProps) {
+export default function TeamCard(props: TeamCardProps) {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [name, setName] = useState<string>();
+  const [players, setPlayers] = useState<Player[]>([]);
   const [index, setIndex] = useState<number>(props.index);
 
   useEffect(() => {
-    console.log("Setting name");
     setName(props.name);
     setIndex(props.index);
+    setPlayers(props.players);
     if (props.name === undefined) {
       setIsEditing(true);
     }
@@ -24,7 +28,11 @@ export default function PlayerCard(props: PlayerCardProps) {
 
   const save = (formData: FormData) => {
     const name: string = (formData.get("name") ?? "") as string;
-    if (props.onSave) props.onSave(name, props.index);
+    props.onSave(
+      name,
+      props.index,
+      players.map((p) => p.id)
+    );
     setIsEditing(false);
   };
 
@@ -42,7 +50,7 @@ export default function PlayerCard(props: PlayerCardProps) {
             <input
               id="name"
               name="name"
-              placeholder="Thicc & Juicy"
+              placeholder="Halloweiners"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             ></input>
             <button
@@ -56,21 +64,17 @@ export default function PlayerCard(props: PlayerCardProps) {
       ) : (
         <div className="w-full grid grid-cols-[1fr_auto_auto] gap-4">
           <p>{name}</p>
-          {props.canEdit && (
-            <button type="button" onClick={() => setIsEditing(true)}>
-              Edit
-            </button>
-          )}
-          {props.canEdit && (
-            <button
-              type="button"
-              onClick={() => props.onRemove && props.onRemove(index)}
-            >
-              Remove
-            </button>
-          )}
+          <button type="button" onClick={() => setIsEditing(true)}>
+            Edit
+          </button>
+          <button type="button" onClick={() => props.onRemove(index)}>
+            Remove
+          </button>
         </div>
       )}
+      {players.map((player, i) => (
+        <PlayerCard key={i} name={player.name} index={i}></PlayerCard>
+      ))}
     </div>
   );
 }

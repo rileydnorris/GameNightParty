@@ -1,7 +1,8 @@
 "use client";
 import { Player } from "@types";
 import { useEffect, useState } from "react";
-import PlayerCard from "../../components/player-card";
+import { PlayerCard } from "@components";
+import { uniqueId } from "@utils";
 
 export default function PlayersPage() {
   const [players, setPlayers] = useState<Player[]>([]);
@@ -33,20 +34,22 @@ export default function PlayersPage() {
   };
 
   const addPlayer = () => {
-    setPlayers([...players, { name: undefined }]);
+    setPlayers([...players, { id: uniqueId() }]);
   };
 
   return (
     <div className="container">
       <h2 className="text-lg font-bold mb-5">Add Players</h2>
       {players.map((player, i) => (
-        <PlayerCard
-          key={i}
-          name={player.name}
-          onSave={savePlayer}
-          onRemove={removePlayer}
-          index={i}
-        ></PlayerCard>
+        <div className="w-2/5" key={i}>
+          <PlayerCard
+            name={player.name}
+            onSave={savePlayer}
+            onRemove={removePlayer}
+            index={i}
+            canEdit={true}
+          ></PlayerCard>
+        </div>
       ))}
       <button type="button" onClick={addPlayer}>
         Add a player
