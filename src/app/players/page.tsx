@@ -3,15 +3,24 @@ import { Player } from "@types";
 import { useEffect, useState } from "react";
 import { PlayerCard } from "@components";
 import { uniqueId } from "@utils";
+import { Button } from "../../components/ui/button";
+import { Plus } from "lucide-react";
 
 export default function PlayersPage() {
   const [players, setPlayers] = useState<Player[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     setPlayers(
       JSON.parse(window.sessionStorage.getItem("players") ?? "[]") ?? []
     );
+    setIsLoading(false);
   }, []);
+
+  useEffect(() => {
+    if (!isLoading)
+      window.sessionStorage.setItem("players", JSON.stringify(players));
+  }, [players, isLoading]);
 
   const savePlayer = (name: string, index: number, icon?: string) => {
     const updatedPlayers = players;
@@ -21,10 +30,6 @@ export default function PlayersPage() {
       icon,
     };
     setPlayers([...updatedPlayers]);
-    window.sessionStorage.setItem(
-      "players",
-      JSON.stringify([...updatedPlayers])
-    );
   };
 
   const removePlayer = (index: number) => {
@@ -39,9 +44,14 @@ export default function PlayersPage() {
 
   return (
     <div className="container">
-      <h2 className="text-lg font-bold mb-5">Add Players</h2>
+      <span className="flex flex-row">
+        <h2 className="text-lg font-bold mb-5">Add Players</h2>
+        <Button onClick={addPlayer} className="ml-auto">
+          <Plus className="mr-2 h-4 w-4" /> Add player
+        </Button>
+      </span>
       {players.map((player, i) => (
-        <div className="w-2/5" key={i}>
+        <div className="min-w-[500px] max-w-[600px]" key={i}>
           <PlayerCard
             name={player.name}
             onSave={savePlayer}
@@ -51,9 +61,6 @@ export default function PlayersPage() {
           ></PlayerCard>
         </div>
       ))}
-      <button type="button" onClick={addPlayer}>
-        Add a player
-      </button>
     </div>
   );
 }

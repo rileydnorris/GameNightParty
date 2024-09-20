@@ -1,4 +1,9 @@
 import { useEffect, useState } from "react";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Button } from "./ui/button";
+import { AvatarImage, Avatar } from "./ui/avatar";
+import { Pencil, Trash2 } from "lucide-react";
 
 interface PlayerCardProps {
   onSave?: (name: string, index: number, icon?: string) => void;
@@ -14,7 +19,6 @@ export default function PlayerCard(props: PlayerCardProps) {
   const [index, setIndex] = useState<number>(props.index);
 
   useEffect(() => {
-    console.log("Setting name");
     setName(props.name);
     setIndex(props.index);
     if (props.name === undefined) {
@@ -29,45 +33,50 @@ export default function PlayerCard(props: PlayerCardProps) {
   };
 
   return (
-    <div className="p-5 light:bg-slate-200 dark:bg-slate-900 shadow-lg rounded-md mb-3">
+    <div className="p-3">
       {isEditing ? (
         <form action={save}>
-          <label
-            htmlFor="name"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
-            Name
-          </label>
-          <div className="w-full grid grid-cols-[1fr_auto] gap-4">
-            <input
-              id="name"
-              name="name"
-              placeholder="Thicc & Juicy"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            ></input>
-            <button
-              type="submit"
-              className="w-min text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              Submit
-            </button>
+          <div className="w-full grid grid-cols-[auto_1fr_auto] gap-6">
+            <Avatar className="flex h-10 w-10 overflow-hidden rounded-full self-center">
+              <AvatarImage src="https://github.com/shadcn.png"></AvatarImage>
+            </Avatar>
+            <div className="grid w-full max-w-sm items-center gap-1.5">
+              <Label htmlFor="name">Name</Label>
+              <Input
+                id="name"
+                name="name"
+                placeholder="Thicc & Juicy"
+                defaultValue={name}
+              />
+            </div>
+            <Button type="submit" variant="outline" className="self-end">
+              Save
+            </Button>
           </div>
         </form>
       ) : (
-        <div className="w-full grid grid-cols-[1fr_auto_auto] gap-4">
+        <div className="w-full grid grid-cols-[auto_1fr_auto_auto] gap-6 items-center">
+          <Avatar className="flex h-10 w-10 overflow-hidden rounded-full self-center">
+            <AvatarImage src="https://github.com/shadcn.png"></AvatarImage>
+          </Avatar>
           <p>{name}</p>
           {props.canEdit && (
-            <button type="button" onClick={() => setIsEditing(true)}>
-              Edit
-            </button>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setIsEditing(true)}
+            >
+              <Pencil className="h-4 w-4" />
+            </Button>
           )}
           {props.canEdit && (
-            <button
-              type="button"
+            <Button
+              variant="outline"
+              size="icon"
               onClick={() => props.onRemove && props.onRemove(index)}
             >
-              Remove
-            </button>
+              <Trash2 className="h-4 w-4" />
+            </Button>
           )}
         </div>
       )}

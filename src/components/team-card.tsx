@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import { Player } from "@types";
 import { PlayerCard } from "@components";
+import { AvatarImage, Avatar } from "./ui/avatar";
+import { Button } from "./ui/button";
+import { Pencil, Trash2 } from "lucide-react";
+import { Card, CardContent, CardHeader } from "./ui/card";
+import { Label } from "./ui/label";
+import { Input } from "./ui/input";
 
 interface TeamCardProps {
   onSave: (name: string, index: number, playerIds: string[]) => void;
@@ -37,44 +43,63 @@ export default function TeamCard(props: TeamCardProps) {
   };
 
   return (
-    <div className="p-5 light:bg-slate-200 dark:bg-slate-900 shadow-lg rounded-md mb-3">
-      {isEditing ? (
-        <form action={save}>
-          <label
-            htmlFor="name"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
-            Name
-          </label>
-          <div className="w-full grid grid-cols-[1fr_auto] gap-4">
-            <input
-              id="name"
-              name="name"
-              placeholder="Halloweiners"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            ></input>
-            <button
-              type="submit"
-              className="w-min text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+    <Card className="mb-3">
+      {/* Header */}
+      {!isEditing && (
+        <CardHeader>
+          <div className="w-full grid grid-cols-[auto_1fr_auto_auto] gap-4 items-center">
+            <Avatar className="flex h-10 w-10 overflow-hidden rounded-full self-center">
+              <AvatarImage src="https://github.com/shadcn.png"></AvatarImage>
+            </Avatar>
+            <p className="font-extrabold">{name}</p>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setIsEditing(true)}
             >
-              Submit
-            </button>
+              <Pencil className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => props.onRemove && props.onRemove(index)}
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
           </div>
-        </form>
-      ) : (
-        <div className="w-full grid grid-cols-[1fr_auto_auto] gap-4">
-          <p>{name}</p>
-          <button type="button" onClick={() => setIsEditing(true)}>
-            Edit
-          </button>
-          <button type="button" onClick={() => props.onRemove(index)}>
-            Remove
-          </button>
-        </div>
+        </CardHeader>
       )}
-      {players.map((player, i) => (
-        <PlayerCard key={i} name={player.name} index={i}></PlayerCard>
-      ))}
-    </div>
+      <CardContent>
+        {/* Editing */}
+        {isEditing && (
+          <form action={save} className="p-6">
+            <div className="w-full grid grid-cols-[auto_1fr_auto] gap-6">
+              <Avatar className="flex h-10 w-10 overflow-hidden rounded-full self-center">
+                <AvatarImage src="https://github.com/shadcn.png"></AvatarImage>
+              </Avatar>
+              <div className="grid w-full max-w-sm items-center gap-1.5">
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  id="name"
+                  name="name"
+                  placeholder="Halloweiners"
+                  defaultValue={name}
+                />
+              </div>
+              <Button type="submit" variant="outline" className="self-end">
+                Save
+              </Button>
+            </div>
+          </form>
+        )}
+
+        {/* Players */}
+        <hr className="mb-3"></hr>
+        <p className="my-3">Players:</p>
+        {players.map((player, i) => (
+          <PlayerCard key={i} name={player.name} index={i}></PlayerCard>
+        ))}
+      </CardContent>
+    </Card>
   );
 }
