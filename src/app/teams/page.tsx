@@ -2,39 +2,35 @@
 import { useEffect, useState } from "react";
 import { Team, Player } from "@types";
 import { TeamCard, PlayerCard } from "@components";
-import { uniqueId } from "@utils";
+import { getUnassignedPlayers, uniqueId } from "@utils";
 import { Button } from "../../components/ui/button";
 import { Plus } from "lucide-react";
 
 export default function TeamsPage() {
   const [teams, setTeams] = useState<Team[]>([]);
-  const [players, setPlayers] = useState<Player[]>([]);
+  const [unassignedPlayers, setUnassignedPlayers] = useState<Player[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     setTeams(JSON.parse(window.sessionStorage.getItem("teams") ?? "[]") ?? []);
-    setPlayers(
-      JSON.parse(window.sessionStorage.getItem("players") ?? "[]") ?? []
-    );
+    setUnassignedPlayers(getUnassignedPlayers());
     setIsLoading(false);
   }, []);
 
   useEffect(() => {
     if (!isLoading)
       window.sessionStorage.setItem("teams", JSON.stringify(teams));
+    setUnassignedPlayers(getUnassignedPlayers());
   }, [teams, isLoading]);
 
   const addTeam = () => {
     setTeams([...teams, { id: uniqueId(), playerIds: [] }]);
   };
 
-  const updateTeam = (name: string, index: number, playerIds: string[]) => {
+  const updateTeam = (updatedTeam: Team) => {
     const updatedTeams = teams;
-    updatedTeams[index] = {
-      ...updatedTeams[index],
-      playerIds,
-      name,
-    };
+    const i = updatedTeams.findIndex((t) => t.id === updatedTeam.id);
+    updatedTeams[i] = updatedTeam;
     setTeams([...updatedTeams]);
   };
 
@@ -45,19 +41,6 @@ export default function TeamsPage() {
   };
 
   const removeTeamPlayer = (id: string) => {};
-
-  const getUnassignedPlayers = () => {
-    const unassignedPlayers: Player[] = [];
-    const assignedMap: { [key: string]: boolean } = {};
-    teams.forEach((team) => {
-      team.playerIds.forEach((id) => (assignedMap[id] = true));
-    });
-
-    players.forEach((player) => {
-      if (!assignedMap[player.id]) unassignedPlayers.push(player);
-    });
-    return unassignedPlayers;
-  };
 
   return (
     <div className="container">
@@ -80,11 +63,10 @@ export default function TeamsPage() {
           return (
             <div className="w-[48%]" key={i}>
               <TeamCard
-                name={team.name}
+                team={team}
                 onRemove={removeTeam}
                 onRemovePlayer={removeTeamPlayer}
                 onSave={updateTeam}
-                players={players}
                 index={i}
               ></TeamCard>
             </div>
@@ -93,16 +75,17 @@ export default function TeamsPage() {
       </span>
 
       {/* Unassigned Players */}
-      <hr className="my-6"></hr>
-      <p className="text-md font-bold">Unassigned Players</p>
-      {getUnassignedPlayers().length === 0 && (
-        <p className="my-3">No unassigned players!</p>
+      {unassignedPlayers.length !== 0 && (
+        <span>
+          <hr className="my-6"></hr>
+          <p className="text-md font-bold">Unassigned Players</p>
+          {unassignedPlayers.map((player, i) => (
+            <div className="w-2/5" key={i}>
+              <PlayerCard name={player.name} index={i}></PlayerCard>
+            </div>
+          ))}
+        </span>
       )}
-      {getUnassignedPlayers().map((player, i) => (
-        <div className="w-2/5" key={i}>
-          <PlayerCard name={player.name} index={i}></PlayerCard>
-        </div>
-      ))}
     </div>
   );
 }
