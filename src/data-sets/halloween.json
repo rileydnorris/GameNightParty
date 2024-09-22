@@ -1,0 +1,114 @@
+{
+  "title": "Spooky Feud",
+  "questions": [
+    {
+      "title": "What's the worst kind of candy to get during trick or treating?",
+      "answers": [
+        {
+          "text": "Candy Corn",
+          "acceptableAnswers": ["candy corn", "candycorn", "corn"],
+          "value": "157"
+        },
+        {
+          "text": "Licorice",
+          "acceptableAnswers": ["licorice", "red licorice", "black licorice"],
+          "value": "69"
+        },
+        {
+          "text": "Tootsie Roll",
+          "acceptableAnswers": ["tootsie roll", "tootsie role", "tootsie"],
+          "value": "55"
+        },
+        {
+          "text": "Raisins",
+          "acceptableAnswers": [
+            "raisins",
+            "raisin",
+            "chocolate raisins",
+            "chocolate raisin"
+          ],
+          "value": "43"
+        },
+        {
+          "text": "Apple / Fruit",
+          "acceptableAnswers": [
+            "apple",
+            "orange",
+            "banana",
+            "fruit",
+            "fruits",
+            "healthy"
+          ],
+          "value": "34"
+        },
+        {
+          "text": "Almond Joy",
+          "acceptableAnswers": [
+            "almond Joy",
+            "almond Bounty",
+            "almond Mound",
+            "almond",
+            "almonds"
+          ],
+          "value": "30"
+        },
+        {
+          "text": "Circus Peanuts",
+          "acceptableAnswers": ["peanuts", "circus peanuts", "panut"],
+          "value": "22"
+        },
+        {
+          "text": "Dots",
+          "acceptableAnswers": ["dots", "dot", "dot candy"],
+          "value": "22"
+        },
+        {
+          "text": "Gum",
+          "acceptableAnswers": ["gum", "stick of gum"],
+          "value": "22"
+        },
+        {
+          "text": "Non-candy (toothbrush, pencil, etc)",
+          "acceptableAnswers": [
+            "non-candy",
+            "not candy",
+            "non candy",
+            "toothbrush",
+            "pencil"
+          ],
+          "value": "20"
+        },
+        {
+          "text": "Smarties",
+          "acceptableAnswers": ["smarties", "smartie", "smartys", "smarty"],
+          "value": "19"
+        },
+        {
+          "text": "Whoppers",
+          "acceptableAnswers": [
+            "whoppers",
+            "whopper",
+            "wopper",
+            "woppers",
+            "malt ball",
+            "malt balls",
+            "malt-ball",
+            "malt-balls"
+          ],
+          "value": "15"
+        },
+        {
+          "text": "Necco Wafers",
+          "acceptableAnswers": [
+            "necco wafers",
+            "necco wafer",
+            "necco",
+            "wafer",
+            "wafers"
+          ],
+          "value": "14"
+        }
+      ]
+    }
+  ]
+}

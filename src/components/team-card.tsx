@@ -47,6 +47,7 @@ export default function TeamCard(props: TeamCardProps) {
     if (updatedTeam) {
       updatedTeam.name = (formData.get("name") ?? "") as string;
       updatedTeam.playerIds = teamPlayers.map((p) => p.id);
+      props.onSave(updatedTeam);
       setIsEditing(false);
     }
   };

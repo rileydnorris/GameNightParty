@@ -14,6 +14,10 @@ export function getPlayers(): Player[] {
   return JSON.parse(window.sessionStorage.getItem("players") ?? "[]");
 }
 
+export function getTeams(): Team[] {
+  return JSON.parse(window.sessionStorage.getItem("teams") ?? "[]");
+}
+
 export function getUnassignedPlayers() {
   const teams = JSON.parse(window.sessionStorage.getItem("teams") ?? "[]");
   const players = JSON.parse(window.sessionStorage.getItem("players") ?? "[]");
